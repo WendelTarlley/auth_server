@@ -4,6 +4,7 @@ package com.tarlley.auth_server.mapper;
 import com.tarlley.auth_server.dto.UsuarioRegistroDTO;
 import com.tarlley.auth_server.model.Usuario;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface UsuarioMapper {

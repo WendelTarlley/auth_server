@@ -26,13 +26,6 @@ public class UsuarioService {
         this.passwordEncoder = passwordEncoder;
     }
 
-    public Usuario save(Usuario user) {
-        if (user.getRoles() == null){
-            throw new BadRequestException("Role do usuário não informado!");
-        }
-        return usuarioRepository.save(user);
-    }
-
     public Optional<Usuario> buscarUsuarioPorUsername(String username) {
         return usuarioRepository.findByUsername(username);
     }

@@ -5,7 +5,6 @@ import com.tarlley.auth_server.dto.UserLoginDTO;
 import com.tarlley.auth_server.model.Usuario;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.userdetails.User;
 import org.springframework.stereotype.Service;
 
 @Service
