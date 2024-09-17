@@ -7,6 +7,7 @@ import com.tarlley.auth_server.services.LoginService;
 import com.tarlley.auth_server.services.UsuarioService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -31,6 +32,6 @@ public class LoginController {
 
     @PostMapping("/register")
     public ResponseEntity<?> registrarNovoUsuario(@RequestBody @Valid UsuarioRegistroDTO usuarioRegistroDTO){
-        return ResponseEntity.ok().body(usuarioService.registrarUsuario(usuarioRegistroDTO));
+        return ResponseEntity.status(HttpStatus.CREATED).body(usuarioService.registrarUsuario(usuarioRegistroDTO));
     }
 }
