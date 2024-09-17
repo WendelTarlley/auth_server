@@ -5,12 +5,15 @@ import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTCreationException;
 import com.auth0.jwt.exceptions.JWTVerificationException;
 import com.tarlley.auth_server.model.Usuario;
+import com.tarlley.auth_server.repository.UsuarioRepository;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
 import java.time.LocalDateTime;
 import java.time.ZoneOffset;
+import java.util.stream.Collectors;
 
 @Service
 public class TokenService {
@@ -18,14 +21,25 @@ public class TokenService {
     @Value("$api.security.token.secret")
     String secret;
 
+    private final UsuarioRepository usuarioRepository;
+
+    public TokenService(UsuarioRepository usuarioRepository) {
+        this.usuarioRepository = usuarioRepository;
+    }
+
     public String generateToken(Usuario usuario){
         String token;
+
+        String authorities = usuario.getAuthorities().stream()
+                .map(Object::toString)
+                .collect(Collectors.joining(","));
 
         try {
             Algorithm algorithm = Algorithm.HMAC256(secret);
             token = JWT.create()
-                    .withIssuer("task-api")
+                    .withIssuer("auth-server")
                     .withSubject(usuario.getUsername())
+                    .withClaim("roles",authorities)
                     .withExpiresAt(getExpirationDate())
                     .sign(algorithm);
 
@@ -40,7 +54,7 @@ public class TokenService {
             Algorithm algorithm = Algorithm.HMAC256(secret);
 
             return JWT.require(algorithm)
-                    .withIssuer("task-api")
+                    .withIssuer("auth-server")
                     .build()
                     .verify(token)
                     .getSubject();
@@ -49,6 +63,14 @@ public class TokenService {
         }
     }
 
+    public Usuario validarAuth(String token){
+        Usuario userDetails = usuarioRepository.findByUsername(token).orElse(null);
+        if (userDetails != null){
+
+          return userDetails;
+        }
+    return null;
+    }
     private Instant getExpirationDate(){
         return LocalDateTime.now().plusHours(2).toInstant(ZoneOffset.of("-03:00"));
     }

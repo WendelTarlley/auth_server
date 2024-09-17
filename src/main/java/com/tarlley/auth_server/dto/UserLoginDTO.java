@@ -1,4 +1,9 @@
 package com.tarlley.auth_server.dto;
 
-public record UserLoginDTO(String username, String password) {
+import com.tarlley.auth_server.enumerated.Role;
+import jakarta.validation.constraints.NotBlank;
+
+import java.util.Set;
+
+public record UserLoginDTO(@NotBlank  String username, @NotBlank String password,  Set<Role> roles) {
 }
